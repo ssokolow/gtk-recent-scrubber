@@ -1,0 +1,43 @@
+Having a "Recently Used" list in the GTK+ Open File dialog is a smart and very useful idea. The problem is that, very quickly, it ends up looking like this
+
+[float left: raunchy_porn.jpg, Q3 Fiscal Projections.ods, disgusting_midget_porn.avi, ...]
+
+...or like this...
+
+[float right: bad_twilight_fanfiction.txt, Master Thesis Draft.odt, bad_pony_fanfiction.txt, Jersey Shore episode X.avi]
+
+...or even like this...
+
+[float right: School Play 1999.avi, baby_pictures_03.jpg]
+
+Oh, the horror.
+
+So, you keep running for the privacy panel to wipe your recent files list (if you can even find it) and, sooner or later, you decide that it'd be easier to just turn off the recent files list and that you wouldn't really be losing anything in the process.
+
+GTK+ Recent Files Scrubber takes a slightly different approach, inspired by the HistoryBlock extension for Firefox. With this scrubber, you give it a list of prefixes (folders, essentially) that you don't want to show up in your recent files list, then you get on with your life.
+
+The scrubber will sit in the background, waiting for new files to appear in the list. If they match any of the entries in your blacklist, it kicks them back out. No fuss, no muss. You just set it and forget it.
+
+Of course, you're probably wondering how this protects you against, for example, nosy roommates. Won't the presence of this tool lead them straight to whatever it is you want to hide?
+
+There are two major features that help protect you from that:
+
+1. The tool has no GUI. It makes no sounds, shows no windows, and does not display a tray icon. It only appears in lists of running processes, where it blends in among the dozens upon dozens of other unobtrusively-named resident processes on a normal desktop OS.
+
+2. Your blacklist is stored as a list of SHA-1 hashes structured to appear as something completely different. Even if someone identifies its purpose reads the file, the only way to read its contents is to get a list of every single file on the hard drive and check for matches. (This is certainly possible, but it's generally much easier for someone to just snoop around manually until they stumble across something suspicious-looking.)
+
+So what are you waiting for? Install it today and have a Recently Used list that's actually useful.
+
+---
+
+TODO: Features list
+	- Makes sure that your recently-used.xbel has properly paranoid file access permissions.
+
+TODO: Mention that you can rename the program AND the data file to make it harder to notice.
+
+TODO: Mention it here:
+- http://www.techrepublic.com/forum/questions/101-334015/what-no-gtkrc-20
+- http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/
+
+FAQ:
+- [Entry about `which python` returning Python 3 rather than Python 2]
