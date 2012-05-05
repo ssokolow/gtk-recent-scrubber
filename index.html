@@ -55,7 +55,7 @@
 
         <p>So, you keep <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">running for GNOME</a> to wipe your recent files list and, sooner or later, you decide that it'd be easier to just <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">turn it off</a> altogether and that you wouldn't really be losing anything in the process.</p>
 
-        <p>This tool takes a slightly different approach inspired by the <a href="https://addons.mozilla.org/en-US/firefox/addon/historyblock/">HistoryBlock</a> extension for Firefox. With this scrubber, you give it a list of files and folders that you don't want to show up in your recent files list, then you get on with your life. (And it <a href="#stealthy">does its job discreetly</a>.)</p>
+        <p>This tool takes a slightly different approach inspired by the <a href="https://addons.mozilla.org/en-US/firefox/addon/historyblock/">HistoryBlock</a> extension for Firefox. With this scrubber, you give it a list of places that you don't want to show up in your recent files list, then you get on with your life. (And it <a href="#stealthy">does its job discreetly</a>.)</p>
 
         <p>The scrubber will sit in the background, waiting for new files to appear in the list. If they match any of the entries in your blacklist, it kicks them back out. No fuss, no muss. You just set it and forget it.</p>
 
@@ -67,9 +67,10 @@
 <li>Flexible
 
 <ul>
-    <li>Can run as a lightweight daemon, filtering new <acronym title="Most Recently Used">MRU</acronym> list entries as they appear.</li>
-<li>Can run <code>--once</code> and then exit for use in scripts or for testing your blacklist.</li>
-<li>Provides an easy way to <code>--purge</code> your <acronym title="Most Recently Used">MRU</acronym> lists entirely.</li>
+    <li>Prefix matching allows you to blacklist partial names like <u>/home/me/.porn/St</u>uff.mp4</li>
+    <li>Can run as a lightweight daemon, filtering out new entries as they appear.</li>
+    <li>Can run <code>--once</code> and then exit for use in scripts or for testing your blacklist.</li>
+    <li>Provides an easy way to <code>--purge</code> your <acronym title="Most Recently Used">MRU</acronym> lists entirely.</li>
 <li>
     <em>PLANNED: A GUI mode for removing specific entries.</em></li>
 </ul>
