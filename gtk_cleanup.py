@@ -3,18 +3,7 @@
 """A simple little tool which watches GTK+'s global recent files list and
 removes anything that matches a hashed blacklist of URI prefixes.
 
-(like the HistoryBlock extension for Firefox)
-
 --snip--
-
-For example, you could blacklist file:///home/you/whatever/wherever/porn/
-
-It watches the recent list for changes rather than actually blocking
-additions, so there is a few-second interval where the entries exist on disk,
-but it should be good enough for 99% of people.
-
-(If people have the access necessary to exploit it, you've
-got bigger problems.)
 
 @note: The config file is stored in XDG_DATA_DIR for two reasons:
     1. It's probably a good idea to have it roaming.
@@ -30,6 +19,9 @@ got bigger problems.)
 
 @todo: Implement a test suite with full coverage.
 @todo: Audit for uncaught exceptions.
+@todo: Audit and improve docstrings.
+@todo: Write a C{setup.py} and an C{autostart/gtk_cleanup.desktop} for
+       potential packagers.
 
 @todo: Performance optimizations to look into:
     - Explore optimizations to reduce the work done (hashing, etc.) for each
