@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="GTK Recent Files Scrubber : Keep your recent files; Hide your recent vices." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>GTK Recent Files Scrubber</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ssokolow/gtk-recent-scrubber">View on GitHub</a>
+
+          <h1 id="project_title">GTK Recent Files Scrubber</h1>
+          <h2 id="project_tagline">Keep your recent files; Hide your recent vices.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ssokolow/gtk-recent-scrubber/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ssokolow/gtk-recent-scrubber/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>Having a "Recently Used" list in the GTK+ Open File dialog is a smart and very useful idea. The problem is that, very quickly, it ends up looking like this</p>
+
+<p><code>[Screenshot TODO: raunchy_porn.jpg, Q3 Fiscal Projections.ods, disgusting_midget_porn.avi, ...]</code></p>
+
+<p>...or like this...</p>
+
+<p><code>[Screenshot TODO: bad_twilight_fanfiction.txt, Master Thesis Draft.odt, bad_pony_fanfiction.txt, Jersey Shore episode X.avi]</code></p>
+
+<p>...or even like this...</p>
+
+<p><code>[Screenshot TODO: School Play 1999.avi, baby_pictures_03.jpg]</code></p>
+
+<p>Oh, the horror.</p>
+
+<p>So, you keep running for the privacy panel to wipe your recent files list (if you can even find it) and, sooner or later, you decide that it'd be easier to just turn off the recent files list and that you wouldn't really be losing anything in the process.</p>
+
+<p>GTK+ Recent Files Scrubber takes a slightly different approach., inspired by the <a href="https://addons.mozilla.org/en-US/firefox/addon/historyblock/">HistoryBlock</a> extension for Firefox. With this scrubber, you give it a list of prefixes (folders, essentially) that you don't want to show up in your recent files list, then you get on with your life.</p>
+
+<p>The scrubber will sit in the background, waiting for new files to appear in the list. If they match any of the entries in your blacklist, it kicks them back out. No fuss, no muss. You just set it and forget it.</p>
+
+<p>So what are you waiting for? Install it today and have a Recently Used list that's actually useful.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Use it however you want
+
+<ul>
+<li>Can run as a lightweight daemon, watching for new MRU list entries and filtering them as they appear.</li>
+<li>Can run <code>--once</code> and then exit for use in scripts or for testing/debugging your blacklist.</li>
+<li>Can be used as a scriptable command for purging the MRU list entirely via the <code>--purge</code> option.</li>
+<li>
+<strong>PLANNED:</strong> A GUI mode for removing specific entries without manually editing <code>recently-used.xbel</code>.</li>
+</ul>
+</li>
+<li>Cautious
+
+<ul>
+<li>Checks to make sure your <code>recently-used.xbel</code> is only readable and writable by you.</li>
+<li>Your blacklist is hashed so nosy roommates/girlfriends/boyfriends and curious family members will find it much easier to just snoop around the old-fashioned way.</li>
+</ul>
+</li>
+<li>Stealthy
+
+<ul>
+<li>No GUI, makes no sounds, and appears in process managers as just another innocuous Python script.</li>
+<li>It's just one file. Install it wherever you want and rename it to whatever you want to make it more stealthy. (You can also specify non-default names for the blacklist file)</li>
+<li>The contents of the blacklist file are laid out so as to be easily mistaken for something else. (eg. the data store for a "most frequently used" list based on hashes of file contents)</li>
+</ul>
+</li>
+<li>Good for any desktop where apps use GTK+ Open dialogs. (GNOME, Xfce, LXDE, anything with GIMP or Inkscape or Pidgin or Firefox or gVim, etc.)</li>
+</ul><h2>Requirements</h2>
+
+<ul>
+<li>Python 2.5+</li>
+<li>GTK 2.10+ (for <code>gtk.RecentManager</code>)</li>
+<li>PyGTK</li>
+</ul><p><strong>Note:</strong> Currently only tested on Lubuntu Linux 11.10 and Ubuntu Linux 12.04 but should theoretically work anywhere the requirements are met. (Though the default location for storing the blacklist isn't ideal on Windows)</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">GTK Recent Files Scrubber maintained by <a href="https://github.com/ssokolow">ssokolow</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
