@@ -53,9 +53,9 @@
 
         <p style="clear: both;">Oh, the horror.</p>
 
-        <p>So, you keep running for <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">GNOME</a> to wipe your recent files list and, sooner or later, you decide that it'd be easier to just <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">turn it off</a> altogether and that you wouldn't really be losing anything in the process.</p>
+        <p>So, you keep <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">running for GNOME</a> to wipe your recent files list and, sooner or later, you decide that it'd be easier to just <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">turn it off</a> altogether and that you wouldn't really be losing anything in the process.</p>
 
-        <p>This tool takes a slightly different approach inspired by the <a href="https://addons.mozilla.org/en-US/firefox/addon/historyblock/">HistoryBlock</a> extension for Firefox. With this scrubber, you give it a list of files and folders that you don't want to show up in your recent files list, then you get on with your life.</p>
+        <p>This tool takes a slightly different approach inspired by the <a href="https://addons.mozilla.org/en-US/firefox/addon/historyblock/">HistoryBlock</a> extension for Firefox. With this scrubber, you give it a list of files and folders that you don't want to show up in your recent files list, then you get on with your life. (And it <a href="#stealthy">does its job discreetly</a>.)</p>
 
         <p>The scrubber will sit in the background, waiting for new files to appear in the list. If they match any of the entries in your blacklist, it kicks them back out. No fuss, no muss. You just set it and forget it.</p>
 
@@ -74,23 +74,25 @@
     <em>PLANNED: A GUI mode for removing specific entries.</em></li>
 </ul>
 </li>
-<li>Cautious
+<li id='stealthy'>Stealthy
 
 <ul>
-<li>Checks that your <code>recently-used.xbel</code> is only readable and writable by you.</li>
-<li>Your blacklist is hashed so nosy roommates/girlfriends/boyfriends and curious family members will find it much easier to just snoop around the old-fashioned way.</li>
+    <li><strong>Your blacklist is hashed so roommates and relatives can't read it.</strong></li>
+    <li>It's just one file. Install it wherever and name it whatever.</li>
+    <li>No <acronym title="Graphical User Interface">GUI</acronym>. Just one of many innocuous Python scripts in the task manager.</li>
+    <li>Use <code>--config</code> to set your own name for the blacklist file.</li>
+    <li>When on disk, the blacklist is easily mistaken for other types of data.</li>
 </ul>
 </li>
-<li>Stealthy
+<li id='cautious'>Cautious
 
 <ul>
-<li>No GUI, makes no sounds, and appears in process managers as just another innocuous Python script.</li>
-<li>It's just one file. Install it wherever you want and rename it to whatever you want to make it more stealthy. (You can also specify non-default names for the blacklist file)</li>
-<li>The contents of the blacklist file are laid out so as to be easily mistaken for something else. (eg. the data store for a "most frequently used" list based on hashes of file contents)</li>
+    <li>Checks that your <code>recently-used.xbel</code> is only readable and writable by you.</li>
+    <li>Never shows the names of removed entries, even at its most verbose.</li>
 </ul>
 </li>
 <li>Good for any desktop where apps use GTK+ Open dialogs.
-
+    <!-- TODO: Consider reworking this into a bunch of logos. -->
 <ul>
     <li>GNOME</li>
     <li>Xfce</li>
@@ -103,7 +105,7 @@
 <ul>
 <li>Python 2.5+</li>
 <li>GTK 2.10+ (for <code>gtk.RecentManager</code>)</li>
-<li>PyGTK</li>
+<li>PyGTK 2.10+</li>
 </ul><p><strong>Note:</strong> Currently only tested on <a href="http://lubuntu.net/">Lubuntu Linux</a> 11.10 and <a href="http://www.ubuntu.com/">Ubuntu Linux</a> 12.04 but should theoretically work anywhere the requirements are met. (Though the default location for storing the blacklist isn't ideal on Windows)</p>
       </section>
     </div>
