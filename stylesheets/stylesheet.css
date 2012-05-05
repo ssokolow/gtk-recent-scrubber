@@ -258,11 +258,6 @@ form {
   padding: 20px;
 }
 
-img {
-  width: 100%;
-  max-width: 100%;
-}
-
 /*******************************************************************************
 Full-Width Styles
 *******************************************************************************/
@@ -379,6 +374,8 @@ Full-Width Styles
 Site-Specific Additions
 *******************************************************************************/
 .bad_ss_row { clear: right; }
+.bad_ss_row img { float: right; }
+
 li:target {
   border-radius: 1ex;
   box-shadow: 0px 0px 2px 2px #faa;
