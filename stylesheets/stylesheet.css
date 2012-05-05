@@ -376,6 +376,15 @@ Site-Specific Additions
 .bad_ss_row { clear: right; }
 .bad_ss_row img { float: right; }
 
+.badges {
+  float: right;
+  margin-top: 0.8ex;
+}
+.badgebox {
+  display: block;
+  margin-top: 1ex;
+}
+
 li:target {
   border-radius: 1ex;
   box-shadow: 0px 0px 2px 2px #faa;
