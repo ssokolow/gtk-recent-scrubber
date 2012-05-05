@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>GTK Recent Files Scrubber</title>
+    <title>GTK+ Recent Files Scrubber</title>
   </head>
 
   <body>
@@ -18,7 +18,7 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/ssokolow/gtk-recent-scrubber">View on GitHub</a>
 
-          <h1 id="project_title">GTK Recent Files Scrubber</h1>
+          <h1 id="project_title">GTK+ Recent Files Scrubber</h1>
           <h2 id="project_tagline">Keep your recent files; Hide your recent vices.</h2>
 
             <section id="downloads">
@@ -31,45 +31,53 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>Having a "Recently Used" list in the GTK+ Open File dialog is a smart and very useful idea. The problem is that, very quickly, it ends up looking like this</p>
+        <div class="bad_ss_row"><div>
+          <img src="images/bad_sshot_1.png" alt="" style="float: right; width: auto;" />
+          <!-- TODO: Vertically-center properly -->
+          <p style="padding-top: 30px">Having a "Recently Used" list in the Open File dialog is a smart and very useful idea. The problem is that, very quickly, it ends up looking like this</p>
+        </div></div>
 
-<p><code>[Screenshot TODO: raunchy_porn.jpg, Q3 Fiscal Projections.ods, disgusting_midget_porn.avi, ...]</code></p>
+        <div class="bad_ss_row"><div>
+          <img src="images/bad_sshot_2.png" alt="Master Thesis and Jersey Shore" style="float: right; width: auto;" />
+          <p style="padding-top: 60px; margin-left: 6em;">
+            <!-- TODO: Properly -->
+            &nbsp;&nbsp;&nbsp;...or like this...
+          </p>
+        </div>
 
-<p>...or like this...</p>
+        <div class="bad_ss_row">
+        <img src="images/bad_sshot_3.png" alt="Macho Mags and Baby Pictures" style="float: right; width: auto;" />
+        <!-- TODO: Vertically-center properly -->
+        <p style="padding-top: 50px; margin-left: 6em;">...or even like this...</p>
+        </div>
 
-<p><code>[Screenshot TODO: bad_twilight_fanfiction.txt, Master Thesis Draft.odt, bad_pony_fanfiction.txt, Jersey Shore episode X.avi]</code></p>
+        <p style="clear: both;">Oh, the horror.</p>
 
-<p>...or even like this...</p>
+        <p>So, you keep running for <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">GNOME</a> to wipe your recent files list and, sooner or later, you decide that it'd be easier to just <a href="http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/" title="Clear And Disable The Recent Documents List In Ubuntu Linux">turn it off</a> altogether and that you wouldn't really be losing anything in the process.</p>
 
-<p><code>[Screenshot TODO: School Play 1999.avi, baby_pictures_03.jpg]</code></p>
+        <p>This tool takes a slightly different approach inspired by the <a href="https://addons.mozilla.org/en-US/firefox/addon/historyblock/">HistoryBlock</a> extension for Firefox. With this scrubber, you give it a list of files and folders that you don't want to show up in your recent files list, then you get on with your life.</p>
 
-<p>Oh, the horror.</p>
+        <p>The scrubber will sit in the background, waiting for new files to appear in the list. If they match any of the entries in your blacklist, it kicks them back out. No fuss, no muss. You just set it and forget it.</p>
 
-<p>So, you keep running for the privacy panel to wipe your recent files list (if you can even find it) and, sooner or later, you decide that it'd be easier to just turn off the recent files list and that you wouldn't really be losing anything in the process.</p>
-
-<p>GTK+ Recent Files Scrubber takes a slightly different approach., inspired by the <a href="https://addons.mozilla.org/en-US/firefox/addon/historyblock/">HistoryBlock</a> extension for Firefox. With this scrubber, you give it a list of prefixes (folders, essentially) that you don't want to show up in your recent files list, then you get on with your life.</p>
-
-<p>The scrubber will sit in the background, waiting for new files to appear in the list. If they match any of the entries in your blacklist, it kicks them back out. No fuss, no muss. You just set it and forget it.</p>
-
-<p>So what are you waiting for? Install it today and have a Recently Used list that's actually useful.</p>
+        <p>So what are you waiting for? Install it today and have a Recently Used list that's actually useful.</p>
 
 <h2>Features</h2>
 
 <ul>
-<li>Use it however you want
+<li>Flexible
 
 <ul>
-<li>Can run as a lightweight daemon, watching for new MRU list entries and filtering them as they appear.</li>
-<li>Can run <code>--once</code> and then exit for use in scripts or for testing/debugging your blacklist.</li>
-<li>Can be used as a scriptable command for purging the MRU list entirely via the <code>--purge</code> option.</li>
+<li>Can run as a lightweight daemon, filtering new MRU list entries as they appear.</li>
+<li>Can run <code>--once</code> and then exit for use in scripts or for testing your blacklist.</li>
+<li>Provides an easy way to <code>--purge</code> your MRU lists entirely.</li>
 <li>
-<strong>PLANNED:</strong> A GUI mode for removing specific entries without manually editing <code>recently-used.xbel</code>.</li>
+    <em>PLANNED: A GUI mode for removing specific entries.</em></li>
 </ul>
 </li>
 <li>Cautious
 
 <ul>
-<li>Checks to make sure your <code>recently-used.xbel</code> is only readable and writable by you.</li>
+<li>Checks that your <code>recently-used.xbel</code> is only readable and writable by you.</li>
 <li>Your blacklist is hashed so nosy roommates/girlfriends/boyfriends and curious family members will find it much easier to just snoop around the old-fashioned way.</li>
 </ul>
 </li>
@@ -81,14 +89,22 @@
 <li>The contents of the blacklist file are laid out so as to be easily mistaken for something else. (eg. the data store for a "most frequently used" list based on hashes of file contents)</li>
 </ul>
 </li>
-<li>Good for any desktop where apps use GTK+ Open dialogs. (GNOME, Xfce, LXDE, anything with GIMP or Inkscape or Pidgin or Firefox or gVim, etc.)</li>
+<li>Good for any desktop where apps use GTK+ Open dialogs.
+
+<ul>
+    <li>GNOME</li>
+    <li>Xfce</li>
+    <li>LXDE</li>
+    <li>Anything containing Firefox, GIMP, Inkscape, Pidgin, gVim, etc.</li>
+</ul>
+</li>
 </ul><h2>Requirements</h2>
 
 <ul>
 <li>Python 2.5+</li>
 <li>GTK 2.10+ (for <code>gtk.RecentManager</code>)</li>
 <li>PyGTK</li>
-</ul><p><strong>Note:</strong> Currently only tested on Lubuntu Linux 11.10 and Ubuntu Linux 12.04 but should theoretically work anywhere the requirements are met. (Though the default location for storing the blacklist isn't ideal on Windows)</p>
+</ul><p><strong>Note:</strong> Currently only tested on <a href="http://lubuntu.net/">Lubuntu Linux</a> 11.10 and <a href="http://www.ubuntu.com/">Ubuntu Linux</a> 12.04 but should theoretically work anywhere the requirements are met. (Though the default location for storing the blacklist isn't ideal on Windows)</p>
       </section>
     </div>
 
@@ -100,7 +116,17 @@
       </footer>
     </div>
 
-    
-
+    <!-- Piwik -->
+    <script type="text/javascript">
+        var pkBaseURL = (("https:" == document.location.protocol) ? "https://blog.ssokolow.com/stats/" : "http://blog.ssokolow.com/stats/");
+        document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+        </script><script type="text/javascript">
+        try {
+            var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 6);
+            piwikTracker.trackPageView();
+            piwikTracker.enableLinkTracking();
+        } catch( err ) {}
+    </script><noscript><p style="margin: 0"><img src="http://blog.ssokolow.com/stats/piwik.php?idsite=6" style="padding: 0; margin: 0; height: 1px; width: 1px; border:0; box-shadow: none; -webkit-box-shadow: none" alt="" /></p></noscript>
+    <!-- End Piwik Tracking Code -->
   </body>
 </html>
