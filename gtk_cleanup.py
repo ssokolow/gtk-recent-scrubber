@@ -38,7 +38,7 @@ removes anything that matches a hashed blacklist of URI prefixes.
     history entries.
 """
 
-__appname__ = "GTK+ RecentManager Scrubber"
+__appname__ = "GTK+ Recent Files Scrubber"
 __author__  = "Stephan Sokolow (deitarion/SSokolow)"
 __version__ = "0.1"
 __license__ = "GNU GPL 3.0 or later"

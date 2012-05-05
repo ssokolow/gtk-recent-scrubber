@@ -3,7 +3,7 @@ recently-used files list.
 
 So far, it will...
 
-1. watch the default recent list for every screen of every display in your X11
+1. Watch the default recent list for every screen of every display in your X11
    session and filter out URIs that match a blacklist of prefixes. (Like the
    [HistoryBlock](https://addons.mozilla.org/en-US/firefox/addon/historyblock/)
    extension for Firefox)
