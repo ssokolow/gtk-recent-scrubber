@@ -1,3 +1,6 @@
+Add optional support for filtering Zeitgeist's recent lists via its Python API:
+- http://zeitgeist-project.com/docs/0.8.2/client.html
+
 Mention it here:
 - http://www.techrepublic.com/forum/questions/101-334015/what-no-gtkrc-20
 - http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/
