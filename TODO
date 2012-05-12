@@ -5,5 +5,15 @@ Mention it here:
 - http://www.techrepublic.com/forum/questions/101-334015/what-no-gtkrc-20
 - http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/
 
+Plans for further promotion:
+- Prepare a setup.py to make packaging easier and consider offering it up on PyPI
+- Write and test RPM specfiles and .deb packaging stuff
+- Write a basic ebuild which makes use of setup.py (Possibly add to my general
+  project template)
+- Explore packaging for Slackware (and, therefore, for Slax) and AUR.
+- Look into how much I can automate use of OpenSUSE Build Service.
+- Look into how that one Linux games site apparently added an RPM source for
+  SuSE via a URL.
+
 FAQ:
 - Entry about `#!/usr/bin/env python` returning Python 3 rather than Python 2
