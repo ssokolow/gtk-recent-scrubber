@@ -377,12 +377,21 @@ Site-Specific Additions
 .bad_ss_row img { float: right; }
 
 .badges {
-  float: right;
-  margin-top: 0.8ex;
+    float: right;
+    margin-top: 1ex;
 }
-.badgebox {
-  display: block;
-  margin-top: 1ex;
+.badgebox { display: block; }
+.badgebox .gitforked-button-container { min-height: 27px; }
+.badgebox .gitforked-bubble-inner { min-width: 35px; text-align: center; }
+.badgebox img {
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    -o-box-shadow: none;
+    -ms-box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    border: none;
 }
 
 li:target {
