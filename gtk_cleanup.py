@@ -123,7 +123,7 @@ class Blacklist(object):
                         continue
 
                     digest, count = row.strip().split(None, 2)
-                    if digest not in seen: # Catch and remove duplicates
+                    if digest not in seen:  # Catch and remove duplicates
                         key = (digest, int(count))
                         seen.append("%s,%d" % key)
                         results.append(key)
@@ -133,7 +133,8 @@ class Blacklist(object):
 
             return True
         except ValueError, err:
-            log.error("Invalid blacklist format for %s:\n\t%s", self.filename, err)
+            log.error("Invalid blacklist format for %s:\n\t%s",
+                      self.filename, err)
             return False
 
     def remove(self, uri):
@@ -144,7 +145,7 @@ class Blacklist(object):
         try:
             self._contents.pop(self.index(uri))
         except IndexError:
-            raise ValueError("%s does not match any prefixes in the list" % uri)
+            raise ValueError("%s doesn't match any prefixes in the list" % uri)
 
     def remove_all(self, uri):
         """Remove all prefixes from the blacklist which match C{uri}."""
@@ -156,13 +157,14 @@ class Blacklist(object):
 
     def save(self):
         """
-        @note: Blacklists are stored reversed on disk so that, if they are provided
-            sorted for use, the on-disk format will resemble an append-friendly
-            list of hashes of frequently-viewed files.
+        @note: Blacklists are stored reversed on disk so that, if they are
+            provided sorted for use, the on-disk format will resemble an
+            append-friendly list of hashes of frequently-viewed files.
         """
         try:
             with open(self.filename, 'w') as fh:
-                for row in sorted(self._contents, key=lambda x: x[1], reverse=True):
+                for row in sorted(self._contents,
+                        key=lambda x: x[1], reverse=True):
                     fh.write('%s\t%d\n' % row)
             return True
         except Exception, err:
@@ -179,15 +181,16 @@ class RecentManagerScrubber(object):
         """Given a GdkDisplayManager and a GdkDisplay, call L{scrub_entries} on
         all screens and attach it as a change listener.
 
-        @todo: Do I need to find a way to listen for the addition of new screens
-               or is that impossible?
+        @todo: Do I need to find a way to listen for the addition of new
+               screens or is that impossible?
 
         @todo: When a display emits the "closed" signal, does that display's
                manager also stop listening or is my "only once per filename"
                optimization safe?
         """
         for screen in range(0, display.get_n_screens()):
-            manager = gtk.recent_manager_get_for_screen(display.get_screen(screen))
+            manager = gtk.recent_manager_get_for_screen(
+                        display.get_screen(screen))
 
             manager_fname = manager.get_property('filename')
             if manager_fname in self.watched_files:
@@ -200,7 +203,8 @@ class RecentManagerScrubber(object):
                 self.watched_files[manager_fname] = manager
 
             if not os.stat(manager_fname).st_mode & 0777 == 0600:
-                log.warning("Bad file permissions on recent list. Fixing: %s", manager_fname)
+                log.warning("Bad file permissions on recent list. Fixing: %s",
+                        manager_fname)
                 try:
                     os.chmod(manager_fname, 0600)
                 except OSError:
@@ -242,14 +246,14 @@ class RecentManagerScrubber(object):
             else:
                 log.debug('Skipped %s', x.get_display_name())
 
-        # Remove all found entries in one batch so we can show a summarized message
+        # Remove found entries in one batch so we can show a summarized message
         # (Keeps potential log files clean and avoids leaking data into them)
         if found:
             log.info("Removing %d entries" % len(found))
             while found:
                 try:
                     recent_manager.remove_item(found.pop())
-                except gobject.GError, err:
+                except gobject.GError:
                     log.warning("Failed to remove item. (Maybe already done)")
 
 
@@ -257,25 +261,28 @@ if __name__ == '__main__':
     from optparse import OptionParser, OptionGroup
     parser = OptionParser(version="%%prog v%s" % __version__,
             usage="%prog [options]",
-            description=__doc__.replace('\r\n','\n').split('\n--snip--\n')[0])
+            description=__doc__.replace('\r\n', '\n').split('\n--snip--\n')[0])
     parser.add_option('-v', '--verbose', action="count", dest="verbose",
-        default=2, help="Increase the verbosity. Can be used twice for extra effect.")
+        default=2, help="Increase the verbosity. Use twice for extra effect.")
     parser.add_option('-q', '--quiet', action="count", dest="quiet",
-        default=0, help="Decrease the verbosity. Can be used twice for extra effect.")
+        default=0, help="Decrease the verbosity. Use twice for extra effect.")
     #Reminder: %default can be used in help strings.
 
     resopt = OptionGroup(parser, "Resident-Compatible Actions")
     resopt.add_option('--purge', action="store_true", dest="purge",
-        default=False, help="Purge all Recently Used entries during the initial scrub.")
+        default=False, help="Purge all Recently Used entries during the "
+                            "initial scrub.")
     resopt.add_option('--config', action="store", dest="config",
         default=None, help="Specify a non-default config file", metavar="FILE")
     parser.add_option_group(resopt)
 
     nonres = OptionGroup(parser, "Non-Resident Actions")
     nonres.add_option('-a', '--add', action="append", dest="additions",
-        default=[], metavar="URI", help="Add URI to the list of blacklisted prefixes.")
+        default=[], metavar="URI", help="Add URI to the list of blacklisted "
+                                        "prefixes.")
     nonres.add_option('-r', '--remove', action="append", dest="removals",
-        default=[], metavar="URI", help="Remove prefixes from the blacklist which match URI",)
+        default=[], metavar="URI", help="Remove prefixes from the blacklist "
+                                        "which match URI",)
     nonres.add_option('--once', action="store_true", dest="once",
         default=False, help="Don't become resident. Just scrub and exit.")
     parser.add_option_group(nonres)
