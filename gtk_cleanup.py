@@ -250,7 +250,7 @@ class RecentManagerScrubber(object):
                 try:
                     recent_manager.remove_item(found.pop())
                 except gobject.GError, err:
-                    log.warning("Failed to remove item. (Possibly already removed)", err)
+                    log.warning("Failed to remove item. (Maybe already done)")
 
 
 if __name__ == '__main__':
