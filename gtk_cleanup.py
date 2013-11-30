@@ -256,8 +256,7 @@ class RecentManagerScrubber(object):
                 except gobject.GError:
                     log.warning("Failed to remove item. (Maybe already done)")
 
-
-if __name__ == '__main__':
+def main():
     from optparse import OptionParser, OptionGroup
     parser = OptionParser(version="%%prog v%s" % __version__,
             usage="%prog [options]",
@@ -324,3 +323,6 @@ if __name__ == '__main__':
 
     if not opts.once:
         gtk.main()
+
+if __name__ == '__main__':
+    main()
