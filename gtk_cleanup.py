@@ -86,7 +86,7 @@ class Blacklist(object):
         @todo: Look into using something to insert() sort instead.
         """
         if prefix in self:
-            log.debug("Prefix already in the blacklist: %s" % prefix)
+            log.debug("Prefix already in the blacklist: %s", prefix)
         else:
             self._contents.append(self._hash_prefix(prefix))
             self._contents.sort(key=lambda x: x[1])
@@ -177,7 +177,7 @@ class RecentManagerScrubber(object):
         self.watched_files = {}
         self.attached = False
 
-    def attach(self, display_manager, display):
+    def attach(self, display_manager, display): # pylint: disable=W0613
         """Given a GdkDisplayManager and a GdkDisplay, call L{scrub_entries} on
         all screens and attach it as a change listener.
 
@@ -249,7 +249,7 @@ class RecentManagerScrubber(object):
         # Remove found entries in one batch so we can show a summarized message
         # (Keeps potential log files clean and avoids leaking data into them)
         if found:
-            log.info("Removing %d entries" % len(found))
+            log.info("Removing %d entries", len(found))
             while found:
                 try:
                     recent_manager.remove_item(found.pop())
