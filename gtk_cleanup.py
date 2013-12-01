@@ -289,7 +289,7 @@ def main():
     # Allow pre-formatted descriptions
     parser.formatter.format_description = lambda description: description
 
-    opts, args  = parser.parse_args()
+    opts, _ = parser.parse_args()
 
     # Set up clean logging to stderr
     log_levels = [logging.CRITICAL, logging.ERROR, logging.WARNING,
