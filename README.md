@@ -1,3 +1,5 @@
+[![Code Quality](https://landscape.io/github/ssokolow/gtk-recent-scrubber/master/landscape.png)](https://landscape.io/github/ssokolow/gtk-recent-scrubber/master)
+
 GTK+ Recent Scrubber is a simple little tool for managing your global GTK+
 recently-used files list.
 
