@@ -45,7 +45,8 @@ __license__ = "GNU GPL 3.0 or later"
 
 
 import hashlib, logging, os, sys, urllib
-log = logging.getLogger(__name__)
+log = logging.getLogger(__name__)  # pylint: disable=C0103
+
 
 XDG_DATA_DIR = os.environ.get('XDG_DATA_HOME',
         os.path.expanduser('~/.local/share'))
@@ -115,9 +116,9 @@ class Blacklist(object):
         try:
             seen = []
 
-            with open(self.filename, 'rU') as fh:
+            with open(self.filename, 'rU') as fobj:
                 results = []
-                for row in fh:
+                for row in fobj:
                     row = row.strip()
                     if row.startswith('#') or not row:
                         continue
@@ -162,10 +163,10 @@ class Blacklist(object):
             append-friendly list of hashes of frequently-viewed files.
         """
         try:
-            with open(self.filename, 'w') as fh:
+            with open(self.filename, 'w') as fobj:
                 for row in sorted(self._contents,
                         key=lambda x: x[1], reverse=True):
-                    fh.write('%s\t%d\n' % row)
+                    fobj.write('%s\t%d\n' % row)
             return True
         except Exception, err:
             log.error("Failed to write to %s: %s", self.filename, err)
@@ -177,7 +178,7 @@ class RecentManagerScrubber(object):
         self.watched_files = {}
         self.attached = False
 
-    def attach(self, display_manager, display): # pylint: disable=W0613
+    def attach(self, display_manager, display):  # pylint: disable=W0613
         """Given a GdkDisplayManager and a GdkDisplay, call L{scrub_entries} on
         all screens and attach it as a change listener.
 
@@ -239,12 +240,12 @@ class RecentManagerScrubber(object):
     def scrub(self, recent_manager):
         """Given a GtkRecentManager, remove all entries in the blacklist."""
         found = []
-        for x in recent_manager.get_items():
-            uri = x.get_uri()
+        for item in recent_manager.get_items():
+            uri = item.get_uri()
             if uri in self.blacklist:
                 found.append(uri)
             else:
-                log.debug('Skipped %s', x.get_display_name())
+                log.debug('Skipped %s', item.get_display_name())
 
         # Remove found entries in one batch so we can show a summarized message
         # (Keeps potential log files clean and avoids leaking data into them)
@@ -259,8 +260,8 @@ class RecentManagerScrubber(object):
 def main():
     from optparse import OptionParser, OptionGroup
     parser = OptionParser(version="%%prog v%s" % __version__,
-            usage="%prog [options]",
-            description=__doc__.replace('\r\n', '\n').split('\n--snip--\n')[0])
+        usage="%prog [options]",
+        description=__doc__.replace('\r\n', '\n').split('\n--snip--\n')[0])
     parser.add_option('-v', '--verbose', action="count", dest="verbose",
         default=2, help="Increase the verbosity. Use twice for extra effect.")
     parser.add_option('-q', '--quiet', action="count", dest="quiet",
@@ -304,13 +305,13 @@ def main():
     blist.load()
 
     if opts.additions or opts.removals:
-        for x in opts.additions:
-            if (x[0] == os.sep or x[0] == os.altsep or os.path.exists(x) or
-                    os.path.exists(os.path.split(x)[0])):
-                x = 'file://' + urllib.pathname2url(os.path.abspath(x))
-            blist.add(x)
-        for x in opts.removals:
-            blist.remove_all(x)
+        for uri in opts.additions:
+            if (uri[0] == os.sep or uri[0] == os.altsep or os.path.exists(uri)
+                    or os.path.exists(os.path.split(uri)[0])):
+                uri = 'file://' + urllib.pathname2url(os.path.abspath(uri))
+            blist.add(uri)
+        for uri in opts.removals:
+            blist.remove_all(uri)
         blist.save()
         sys.exit(0)
 
