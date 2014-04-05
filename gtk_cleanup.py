@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """A simple little tool which watches GTK+'s global recent files list and
 removes anything that matches a hashed blacklist of URI prefixes.
