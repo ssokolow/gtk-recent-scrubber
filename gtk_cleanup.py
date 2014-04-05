@@ -214,7 +214,7 @@ class RecentManagerScrubber(object):
     def purge(self):
         """Purge all entries from attached Recently Used lists."""
         if not self.attached:
-            #TODO: Better exception.
+            # TODO: Better exception.
             raise Exception("No managers attached. Cannot purge.")
 
         for fname, manager in self.watched_files.items():
@@ -266,7 +266,7 @@ def main():
         default=2, help="Increase the verbosity. Use twice for extra effect.")
     parser.add_option('-q', '--quiet', action="count", dest="quiet",
         default=0, help="Decrease the verbosity. Use twice for extra effect.")
-    #Reminder: %default can be used in help strings.
+    # Reminder: %default can be used in help strings.
 
     resopt = OptionGroup(parser, "Resident-Compatible Actions")
     resopt.add_option('--purge', action="store_true", dest="purge",
