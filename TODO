@@ -1,9 +1,13 @@
+
 Test how a hashlib in Py2 deals with a unicode string and try to match that if
 it's feasible to avoid breaking people's existing blacklists.
 
 Add optional support for filtering ~/.bash_history and ~/.zhistory
 
 Add optional support for filtering ~/.kde/share/apps/RecentDocuments/
+
+Consider rewriting in Rust to minimize memory consuption. (Common courtesy for
+a process that's going to be staying resident in the background)
 
 Add optional support for filtering Zeitgeist's recent lists via its Python API:
 - http://zeitgeist-project.com/docs/0.8.2/client.html

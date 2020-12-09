@@ -8,3 +8,5 @@ blacklist which contain non-ASCII characters.
 - Port from PyGTK and GTK+ 2.x to PyGObject and GTK 3.x
 - Add MyPy type annotations and vim modeline to the code
 - Switch from optparse to argparse for argument parsing
+- Clean up the code and remove a bunch of over-engineered stuff that I can add
+  back when it's actually going to get used.

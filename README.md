@@ -1,12 +1,12 @@
 [![Code Quality](https://landscape.io/github/ssokolow/gtk-recent-scrubber/master/landscape.png)](https://landscape.io/github/ssokolow/gtk-recent-scrubber/master)
 
-GTK+ Recent Scrubber is a simple little tool for managing your global GTK+
+GTK Recent Scrubber is a simple little tool for managing your global GTK
 recently-used files list.
 
 So far, it will...
 
-1. Watch the default recent list for every screen of every display in your X11
-   session and filter out URIs that match a blacklist of prefixes. (Like the
+1. Watch the GTK recent files list for your desktop session and filter out URIs
+   that match a blacklist of prefixes. (Like the
    [HistoryBlock](https://addons.mozilla.org/en-US/firefox/addon/historyblock/)
    extension for Firefox)
 2. Make sure your `recently-used.xbel` files are only readable and writable by
@@ -14,7 +14,8 @@ So far, it will...
 3. Provide a simple `--purge` flag for non-GNOME users who just want to wipe
    everything.
 
-In future, I also plan to implement a GUI so you can remove individual entries.
+In the future, I also plan to implement a GUI so you can remove individual
+entries as well as add support for filtering other lists.
 
 How is this useful? Well, everyone has _some_ guilty pleasure they don't want to
 draw attention to. Without this, having a recent files list isn't very useful
@@ -36,10 +37,22 @@ should be good enough for most people.
 - GTK 3.x (for `Gtk.RecentManager`)
 - PyGObject with the GIR definitions for Gtk, Gdk, and GLib
 
-##Installation
+**Debian and derivatives (Ubuntu, Mint, etc.):**
+
+```sh
+sudo apt-get install python3 python3-gi gir1.2-glib-2.0 gir1.2-gtk-3.0
+```
+
+**Fedora and derivatives:**
+
+```sh
+sudo dnf install python3 python3-gobject gtk3
+```
+
+## Installation
 
 1. Put `gtk_cleanup.py` file wherever you want and name it whatever you want.
-2. Chmod it executable.
+2. Mark it executable. (i.e. `chmod +x gtk_cleanup.py`)
 3. Run `gtk_cleanup.py --add <URI or path>` to build your blacklist.
 4. Run `gtk_cleanup.py -vv --once` to test it.
 5. Use whatever means you normally would to make `gtk_cleanup.py` (no arguments)
