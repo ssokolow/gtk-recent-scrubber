@@ -10,3 +10,5 @@ blacklist which contain non-ASCII characters.
 - Switch from optparse to argparse for argument parsing
 - Clean up the code and remove a bunch of over-engineered stuff that I can add
   back when it's actually going to get used.
+- Remove --once until I can figure out how to force GTK 3 to commit the
+  changes to disk without leaving the mainloop spinning indefinitely.

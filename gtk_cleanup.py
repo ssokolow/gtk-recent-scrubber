@@ -257,8 +257,8 @@ def main():
     nonres.add_argument('-r', '--remove', action="append", dest="removals",
         help="Remove prefixes from the blacklist which match URI and exit.",
         default=[], metavar="URI")
-    nonres.add_argument('--once', action="store_true", default=False,
-        help="Don't become resident. Just scrub and exit.")
+    #nonres.add_argument('--once', action="store_true", default=False,
+    #    help="Don't become resident. Just scrub and exit.")
 
     args = parser.parse_args()
 
@@ -291,8 +291,10 @@ def main():
     if args.purge:
         scrubber.purge()
 
-    if not args.once:
-        Gtk.main()
+    #if args.once:
+    #    Gtk.main_iteration_do(True)
+    #else:
+    Gtk.main()
 
 if __name__ == '__main__':
     main()
