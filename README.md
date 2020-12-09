@@ -16,19 +16,25 @@ So far, it will...
 
 In future, I also plan to implement a GUI so you can remove individual entries.
 
-How is this useful? Well, everyone has _some_ guilty pleasure they don't want to draw attention to. Without this, having a recent files list isn't very useful because you keep having to clear it.
+How is this useful? Well, everyone has _some_ guilty pleasure they don't want to
+draw attention to. Without this, having a recent files list isn't very useful
+because you keep having to clear it.
 
-With it, you can simply blacklist your vices so they don't appear, while the rest of the list continues to function normally.
+With it, you can simply blacklist your vices so they don't appear, while the
+rest of the list continues to function normally.
 
-Even better, your blacklist is hashed, so it's easier for people to just snoop around the old fashioned way than to use it as a starting point.
+Even better, your blacklist is hashed, so it's easier for people to just snoop
+around the old fashioned way than to use it as a starting point.
 
-It isn't _technically_ secure, because there is a few-second interval after programs put things into the list and before they're filtered out again, but it should be good enough for most people.
+It isn't _technically_ secure, because there is a few-second interval after
+programs put things into the list and before they're filtered out again, but it
+should be good enough for most people.
 
 ## Requirements
 
-* Python 2.5+
-* GTK 2.10+ (for `gtk.RecentManager`)
-* PyGTK
+- Python 3.x
+- GTK 3.x (for `Gtk.RecentManager`)
+- PyGObject with the GIR definitions for Gtk, Gdk, and GLib
 
 ##Installation
 
@@ -36,6 +42,7 @@ It isn't _technically_ secure, because there is a few-second interval after prog
 2. Chmod it executable.
 3. Run `gtk_cleanup.py --add <URI or path>` to build your blacklist.
 4. Run `gtk_cleanup.py -vv --once` to test it.
-5. Use whatever means you normally would to make `gtk_cleanup.py` (no arguments) run on login.
+5. Use whatever means you normally would to make `gtk_cleanup.py` (no arguments)
+   run on login.
 
 See `gtk_cleanup.py --help` for other features.
