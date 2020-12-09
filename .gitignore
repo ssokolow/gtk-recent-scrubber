@@ -1,0 +1,5 @@
+.coverage
+.mypy_cache
+_site
+.tox
+/*.egg-info

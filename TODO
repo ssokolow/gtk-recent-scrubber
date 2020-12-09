@@ -1,3 +1,10 @@
+Test how a hashlib in Py2 deals with a unicode string and try to match that if
+it's feasible to avoid breaking people's existing blacklists.
+
+Add optional support for filtering ~/.bash_history and ~/.zhistory
+
+Add optional support for filtering ~/.kde/share/apps/RecentDocuments/
+
 Add optional support for filtering Zeitgeist's recent lists via its Python API:
 - http://zeitgeist-project.com/docs/0.8.2/client.html
 
@@ -6,7 +13,7 @@ Mention it here:
 - http://www.addictivetips.com/ubuntu-linux-tips/clear-and-disable-the-recent-documents-list-in-ubuntu-linux/
 
 Plans for further promotion:
-- Prepare a setup.py to make packaging easier and consider offering it up on PyPI
+- Prepare a setup.py to make packaging easier
 - Write and test RPM specfiles and .deb packaging stuff
 - Write a basic ebuild which makes use of setup.py (Possibly add to my general
   project template)
@@ -14,6 +21,3 @@ Plans for further promotion:
 - Look into how much I can automate use of OpenSUSE Build Service.
 - Look into how that one Linux games site apparently added an RPM source for
   SuSE via a URL.
-
-FAQ:
-- Entry about `#!/usr/bin/env python` returning Python 3 rather than Python 2

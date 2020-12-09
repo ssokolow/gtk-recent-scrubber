@@ -1,0 +1,10 @@
+0.2:
+
+**NOTE:** A unicode-related mistake was revealed during the process of porting
+from Python 2.x to Python 3.x. You may need to re-add any paths in your
+blacklist which contain non-ASCII characters.
+
+- Port from Python 2.x to 3.x
+- Port from PyGTK and GTK+ 2.x to PyGObject and GTK 3.x
+- Add MyPy type annotations and vim modeline to the code
+- Switch from optparse to argparse for argument parsing

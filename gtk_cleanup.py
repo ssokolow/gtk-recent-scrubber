@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """A simple little tool which watches GTK+'s global recent files list and
 removes anything that matches a hashed blacklist of URI prefixes.
@@ -17,6 +17,10 @@ removes anything that matches a hashed blacklist of URI prefixes.
     (And if it does, a list of 20 entries can be sorted a million times over
     in under 3 seconds on my system and reverse=True'd in under 5 seconds.)
 
+@todo: Rewrite docs for Sphinx
+@todo: Finish refactoring away the complexity that was present because GTK+ 2.x
+       made GtkRecentManager one-per-display instead of global.
+@todo: Look for ways to refactor this so it's less "2014 OOP-heavy me"
 @todo: Implement a test suite with full coverage.
 @todo: Audit for uncaught exceptions.
 @todo: Audit and improve docstrings.
@@ -38,33 +42,37 @@ removes anything that matches a hashed blacklist of URI prefixes.
     history entries.
 """
 
+# Prevent Python 2.x PyLint from complaining if run on this
+from __future__ import (absolute_import, division, print_function,
+                        with_statement, unicode_literals)
+
+__author__ = "Stephan Sokolow (deitarion/SSokolow)"
 __appname__ = "GTK+ Recent Files Scrubber"
-__author__  = "Stephan Sokolow (deitarion/SSokolow)"
-__version__ = "0.1"
+__version__ = "0.2"
 __license__ = "GNU GPL 3.0 or later"
 
 
-import hashlib, logging, os, sys, urllib
+import hashlib, logging, os, sys, urllib.request
 log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 XDG_DATA_DIR = os.environ.get('XDG_DATA_HOME',
         os.path.expanduser('~/.local/share'))
 
-try:
-    import pygtk
-    pygtk.require("2.0")
-except ImportError:
-    pass
+import gi  # type: ignore
+gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
+from gi.repository import Gdk, Gtk, GLib  # type: ignore
 
-import gtk, gobject
+from typing import Dict, List, Tuple
+
 
 class Blacklist(object):
-    def __init__(self, filename=None):
+    def __init__(self, filename: str=None):
         self.filename = os.path.join(XDG_DATA_DIR, filename or 'grms.conf')
-        self._contents = []
+        self._contents = []  # type: List[Tuple[str, int]]
 
-    def __contains__(self, uri):
+    def __contains__(self, uri: str) -> bool:
         """Custom 'in' operator behaviour for a list of prefix hashes.
 
         (Tuple ordering chosen because, in an undocumented data file, it is
@@ -77,14 +85,15 @@ class Blacklist(object):
         except IndexError:
             return False
 
-    def _hash_prefix(self, prefix, limit=None):
+    def _hash_prefix(self, prefix: str, limit: int=None) -> Tuple[str, int]:
         """Single location for hash-generation code."""
         prefix = prefix[:limit]
-        return hashlib.sha1(prefix).hexdigest(), len(prefix)
+        # TODO: Set up to transparently migrate from SHA-1 to something better
+        return hashlib.sha1(prefix.encode('utf8')).hexdigest(), len(prefix)
 
-    def add(self, prefix):
+    def add(self, prefix: str):
         """Add a prefix to the hashed blacklist.
-        @todo: Look into using something to insert() sort instead.
+        @todo: Look into a more efficient way to maintain a sorted list.
         """
         if prefix in self:
             log.debug("Prefix already in the blacklist: %s", prefix)
@@ -95,7 +104,7 @@ class Blacklist(object):
     def empty(self):
         self._contents = []
 
-    def index(self, uri):
+    def index(self, uri: str) -> int:
         """Custom 'index' method to do prefix matching."""
         uri_len = len(uri)
         for pos, val in enumerate(self._contents):
@@ -107,16 +116,16 @@ class Blacklist(object):
                 return pos
         raise IndexError("%s does not match any prefixes in the list" % uri)
 
-    def load(self):
+    def load(self) -> bool:
         """@todo: Look into using something to insert() sort instead."""
         if not os.path.exists(self.filename):
             log.debug("No blacklist found: %s", self.filename)
             return False
 
         try:
-            seen = []
+            seen = []  # type: List[str]
 
-            with open(self.filename, 'rU') as fobj:
+            with open(self.filename, 'r') as fobj:
                 results = []
                 for row in fobj:
                     row = row.strip()
@@ -133,12 +142,12 @@ class Blacklist(object):
             self._contents = results
 
             return True
-        except ValueError, err:
+        except ValueError as err:
             log.error("Invalid blacklist format for %s:\n\t%s",
                       self.filename, err)
             return False
 
-    def remove(self, uri):
+    def remove(self, uri: str):
         """Remove the first prefix match for C{uri} from the blacklist.
 
         @raises ValueError: No prefixes matched the given URI.
@@ -148,7 +157,7 @@ class Blacklist(object):
         except IndexError:
             raise ValueError("%s doesn't match any prefixes in the list" % uri)
 
-    def remove_all(self, uri):
+    def remove_all(self, uri: str):
         """Remove all prefixes from the blacklist which match C{uri}."""
         try:
             while True:
@@ -156,7 +165,7 @@ class Blacklist(object):
         except ValueError:
             pass
 
-    def save(self):
+    def save(self) -> bool:
         """
         @note: Blacklists are stored reversed on disk so that, if they are
             provided sorted for use, the on-disk format will resemble an
@@ -168,48 +177,40 @@ class Blacklist(object):
                         key=lambda x: x[1], reverse=True):
                     fobj.write('%s\t%d\n' % row)
             return True
-        except Exception, err:
+        except Exception as err:
             log.error("Failed to write to %s: %s", self.filename, err)
             return False
 
+
 class RecentManagerScrubber(object):
-    def __init__(self, blacklist):
+    def __init__(self, blacklist: Blacklist):
         self.blacklist = blacklist
-        self.watched_files = {}
+        self.watched_files = {}  # type: Dict[str, Gtk.RecentManager]
         self.attached = False
 
-    def attach(self, display_manager, display):  # pylint: disable=W0613
-        """Given a GdkDisplayManager and a GdkDisplay, call L{scrub_entries} on
-        all screens and attach it as a change listener.
-
-        @todo: Do I need to find a way to listen for the addition of new
-               screens or is that impossible?
-
-        @todo: When a display emits the "closed" signal, does that display's
-               manager also stop listening or is my "only once per filename"
-               optimization safe?
+    def attach(self):  # pylint: disable=W0613
+        """Call L{scrub_entries} on all screens and attach it as a change
+        listener.
         """
-        for screen in range(0, display.get_n_screens()):
-            manager = gtk.recent_manager_get_for_screen(
-                        display.get_screen(screen))
+        manager = Gtk.RecentManager.get_default()
 
-            manager_fname = manager.get_property('filename')
-            if manager_fname in self.watched_files:
-                log.debug("Already watched. Skipping: %s", manager_fname)
-                continue
-            else:
-                log.debug("Watching recent files store: %s", manager_fname)
-                self.scrub(manager)
-                manager.connect('changed', self.scrub)
-                self.watched_files[manager_fname] = manager
+        manager_fname = manager.props.filename
+        if manager_fname in self.watched_files:
+            log.debug("Already watched. Skipping: %s", manager_fname)
+            return
+        else:
+            log.debug("Watching recent files store: %s", manager_fname)
+            self.scrub(manager)
+            manager.connect('changed', self.scrub)
+            self.watched_files[manager_fname] = manager
 
-            if not os.stat(manager_fname).st_mode & 0777 == 0600:
-                log.warning("Bad file permissions on recent list. Fixing: %s",
-                        manager_fname)
-                try:
-                    os.chmod(manager_fname, 0600)
-                except OSError:
-                    log.error("Failed to chmod %s", manager_fname)
+        if not os.stat(manager_fname).st_mode & 0o777 == 0o600:
+            log.warning("Bad file permissions on recent list. Fixing: %s",
+                    manager_fname)
+            try:
+                os.chmod(manager_fname, 0o600)
+            except OSError:
+                log.error("Failed to chmod %s", manager_fname)
 
     def purge(self):
         """Purge all entries from attached Recently Used lists."""
@@ -221,7 +222,7 @@ class RecentManagerScrubber(object):
             try:
                 manager.purge_items()
                 log.info("Purged %s", fname)
-            except gobject.GError, err:
+            except GLib.Error as err:
                 log.error("Error while purging %s: %s", fname, err)
 
     def start(self):
@@ -231,14 +232,11 @@ class RecentManagerScrubber(object):
             log.debug("RecentManagerScrubber already started. Skipping.")
             return
 
-        display_manager = gtk.gdk.display_manager_get()
-        for display in display_manager.list_displays():
-            self.attach(display_manager, display)
-            display_manager.connect('display-opened', self.attach)
+        self.attach()
         self.attached = True
 
-    def scrub(self, recent_manager):
-        """Given a GtkRecentManager, remove all entries in the blacklist."""
+    def scrub(self, recent_manager: Gtk.RecentManager):
+        """Given a Gtk.RecentManager, remove all entries in the blacklist."""
         found = []
         for item in recent_manager.get_items():
             uri = item.get_uri()
@@ -254,63 +252,61 @@ class RecentManagerScrubber(object):
             while found:
                 try:
                     recent_manager.remove_item(found.pop())
-                except gobject.GError:
+                except GLib.Error:
                     log.warning("Failed to remove item. (Maybe already done)")
 
+
 def main():
-    from optparse import OptionParser, OptionGroup
-    parser = OptionParser(version="%%prog v%s" % __version__,
-        usage="%prog [options]",
+    """The main entry point, compatible with setuptools entry points."""
+    from argparse import ArgumentParser, RawDescriptionHelpFormatter
+    parser = ArgumentParser(formatter_class=RawDescriptionHelpFormatter,
         description=__doc__.replace('\r\n', '\n').split('\n--snip--\n')[0])
-    parser.add_option('-v', '--verbose', action="count", dest="verbose",
+    parser.add_argument('--version', action='version',
+        version="%%(prog)s v%s" % __version__)
+    parser.add_argument('-v', '--verbose', action="count",
         default=2, help="Increase the verbosity. Use twice for extra effect.")
-    parser.add_option('-q', '--quiet', action="count", dest="quiet",
+    parser.add_argument('-q', '--quiet', action="count",
         default=0, help="Decrease the verbosity. Use twice for extra effect.")
-    # Reminder: %default can be used in help strings.
+    # Reminder: %(default)s can be used in help strings.
 
-    resopt = OptionGroup(parser, "Resident-Compatible Actions")
-    resopt.add_option('--purge', action="store_true", dest="purge",
-        default=False, help="Purge all Recently Used entries during the "
-                            "initial scrub.")
-    resopt.add_option('--config', action="store", dest="config",
-        default=None, help="Specify a non-default config file", metavar="FILE")
-    parser.add_option_group(resopt)
+    resopt = parser.add_argument_group("Resident-Compatible Actions")
+    resopt.add_argument('--purge', action="store_true", default=False,
+        help="Purge all Recently Used entries during the initial scrub.")
+    resopt.add_argument('--config', action="store", default=None,
+        help="Specify a non-default config file", metavar="FILE")
 
-    nonres = OptionGroup(parser, "Non-Resident Actions")
-    nonres.add_option('-a', '--add', action="append", dest="additions",
-        default=[], metavar="URI", help="Add URI to the list of blacklisted "
-                                        "prefixes.")
-    nonres.add_option('-r', '--remove', action="append", dest="removals",
-        default=[], metavar="URI", help="Remove prefixes from the blacklist "
-                                        "which match URI",)
-    nonres.add_option('--once', action="store_true", dest="once",
-        default=False, help="Don't become resident. Just scrub and exit.")
-    parser.add_option_group(nonres)
+    nonres = parser.add_argument_group("Non-Resident Actions")
+    nonres.add_argument('-a', '--add', action="append", dest="additions",
+        help="Add URI to the list of blacklisted prefixes.",
+        default=[], metavar="URI")
+    nonres.add_argument('-r', '--remove', action="append", dest="removals",
+        help="Remove prefixes from the blacklist which match URI",
+        default=[], metavar="URI")
+    nonres.add_argument('--once', action="store_true", default=False,
+        help="Don't become resident. Just scrub and exit.")
 
-    # Allow pre-formatted descriptions
-    parser.formatter.format_description = lambda description: description
-
-    opts, _ = parser.parse_args()
+    args = parser.parse_args()
 
     # Set up clean logging to stderr
     log_levels = [logging.CRITICAL, logging.ERROR, logging.WARNING,
-                  logging.INFO, logging.DEBUG]
-    opts.verbose = min(opts.verbose - opts.quiet, len(log_levels) - 1)
-    opts.verbose = max(opts.verbose, 0)
-    logging.basicConfig(level=log_levels[opts.verbose],
-                        format='%(levelname)s: %(message)s')
+              logging.INFO, logging.DEBUG]
+    args.verbose = min(args.verbose - args.quiet, len(log_levels) - 1)
+    args.verbose = max(args.verbose, 0)
+    logging.basicConfig(level=log_levels[args.verbose],
+                format='%(levelname)s: %(message)s')
 
     # Prepare the blacklist
-    blist = Blacklist(opts.config)
+    blist = Blacklist(args.config)
     blist.load()
 
-    if opts.additions or opts.removals:
-        for uri in opts.additions:
+    if args.additions or args.removals:
+        for uri in args.additions:
             if (uri[0] == os.sep or uri[0] == os.altsep or os.path.exists(uri)
                     or os.path.exists(os.path.split(uri)[0])):
-                uri = 'file://' + urllib.pathname2url(os.path.abspath(uri))
+                uri = 'file://' + urllib.request.pathname2url(
+                    os.path.abspath(uri))
             blist.add(uri)
-        for uri in opts.removals:
+        for uri in args.removals:
             blist.remove_all(uri)
         blist.save()
         sys.exit(0)
@@ -319,11 +315,13 @@ def main():
     scrubber = RecentManagerScrubber(blist)
     scrubber.start()
 
-    if opts.purge:
+    if args.purge:
         scrubber.purge()
 
-    if not opts.once:
-        gtk.main()
+    if not args.once:
+        Gtk.main()
 
 if __name__ == '__main__':
     main()
+
+# vim: set sw=4 sts=4 expandtab :
