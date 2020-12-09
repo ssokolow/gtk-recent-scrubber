@@ -19,7 +19,7 @@ NOTE: For now, the liberal use of sort() calls is acceptable because
 
 TODO: Implement a test suite with full coverage.
 
-TODO: Write a C{setup.py} and an C{autostart/gtk_cleanup.desktop} for
+TODO: Write a ``setup.py`` and an ``autostart/gtk_cleanup.desktop`` for
        potential packagers.
 
 TODO: Performance optimizations to look into:
@@ -128,7 +128,7 @@ class Blacklist(object):
             return False
 
     def remove_all(self, uri: str):
-        """Remove all prefixes from the blacklist which match C{uri}."""
+        """Remove all prefixes from the blacklist which match ``uri``."""
         while True:
             try:
                 self._contents.pop(self.index(uri))
