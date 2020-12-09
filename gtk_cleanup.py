@@ -47,7 +47,9 @@ __version__ = "0.2"
 __license__ = "GNU GPL 3.0 or later"
 
 
-import hashlib, logging, os, sys, urllib.request
+import hashlib, logging, os, sys
+from urllib.request import pathname2url
+
 log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
@@ -211,6 +213,23 @@ class RecentManagerScrubber(object):
             log.debug("Already watched. Skipping: %s", path)
 
 
+def any_to_url(path_or_url: str) -> str:
+    """Helper for flexible command-line input of blacklist entries"""
+    is_abs = path_or_url.startswith(os.sep)
+    is_alt_abs = os.altsep and path_or_url.startswith(os.altsep)
+    exists = os.path.exists(path_or_url)
+
+    # If it's something like /path/to/porn/folder-number- meant to match only
+    # some children of a given folder
+    exists_prefix = os.path.exists(os.path.split(path_or_url)[0])
+
+    if is_abs or is_alt_abs or exists or exists_prefix:
+        path_or_url = 'file://' + pathname2url(os.path.abspath(path_or_url))
+
+    # Otherwise, trust the user to know what they meant
+    return path_or_url
+
+
 def main():
     """The main entry point, compatible with setuptools entry points."""
     from argparse import ArgumentParser, RawDescriptionHelpFormatter
@@ -255,21 +274,13 @@ def main():
     blist = Blacklist(args.config)
     blist.load()
 
-    # TODO: Refactor this code to not be so ugly
-    #
     # TODO: Watch the config file for changes so the watcher doesn't need to be
     #       restarted manually to pick them up.
     if args.additions or args.removals:
-        for uri in args.additions:
-            if (uri[0] == os.sep or
-                    uri[0] == os.altsep or
-                    os.path.exists(uri) or
-                    os.path.exists(os.path.split(uri)[0])):
-                uri = 'file://' + urllib.request.pathname2url(
-                    os.path.abspath(uri))
-            blist.add(uri)
-        for uri in args.removals:
-            blist.remove_all(uri)
+        for arg in args.additions:
+            blist.add(any_to_url(arg))
+        for arg in args.removals:
+            blist.remove_all(any_to_url(arg))
         blist.save()
         sys.exit(0)
 
