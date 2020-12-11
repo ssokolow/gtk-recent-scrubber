@@ -41,6 +41,12 @@ class TestBlacklist(unittest.TestCase):
         self.bl.add('foo')
         self.assertEqual(self.bl._contents, [(3, self.bl._hash_prefix('foo'))])
 
+        self.bl.add('fooo')
+        self.bl.add('foooo')
+        self.bl.add('fooooo')
+        self.bl.add('foooooo')
+        self.assertEqual(self.bl._contents, [(3, self.bl._hash_prefix('foo'))])
+
     def test_index_no_match(self):
         """Blacklist.index: Raises IndexError on no match"""
         self.assertRaises(IndexError, self.bl.index, 'nonexistent')
@@ -121,7 +127,12 @@ class TestBlacklist(unittest.TestCase):
         self.fail("TODO: Test that load produces the expected result from "
                   "known input")
 
-    # TODO: Test how load handles comments and whitespace
+    def test_load_comments(self):
+        """Blacklist.load: Allows and ignores comments and whitespace"""
+        self.fail("TODO: Test how load handles comments and whitespace, "
+                  "including variable whitespace between fields")
+        self.fail("TODO: Test that a load() / save() cycle strips comments "
+                  "since the sorting process would ruin their context.")
 
     def test_remove_all(self):
         """Blacklist.remove_all: Basic function"""
@@ -145,19 +156,26 @@ class TestBlacklist(unittest.TestCase):
         self.assertEqual(self.bl.index('fobaaa'), 2)
         self.assertEqual(self.bl.index('foo'), 1)
 
-        # Assert that removing 'fo' doesn't removes 'foo' or 'fob'
+        # Assert that removing 'fo' doesn't remove 'foo' or 'fob'
         self.bl.remove_all('fo')
-        self.assertEqual(len(self.bl._contents), 3)
+        self.assertEqual(len(self.bl._contents), 3,
+            "Removing a string should not remove strings with it as a prefix")
 
         # But the reverse relationship does work
         self.bl.remove_all('foooooooooo')
         self.bl.remove_all('fobaaaaaaaa')
         self.assertEqual(self.bl.index('faa'), 0)
-        self.assertEqual(len(self.bl._contents), 1)
+        self.assertEqual(len(self.bl._contents), 1,
+            "Removing a string should remove all its prefixes")
 
         # Assert that removing 'fa' returns to an empty list
         self.bl.remove_all('fa')
         self.assertEqual(self.bl._contents, [])
+
+    def test_remove_all_is_all(self):
+        """Blacklist: remove_all doesn't stop at the first match"""
+        self.fail("TODO: Manually build a test file with overlapping prefixes "
+            "and test that remove_all removes all of them.")
 
     def test_save_success(self):
         self.fail("TODO: Test that save produces the expected result from "
