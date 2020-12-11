@@ -69,7 +69,8 @@ class Blacklist(object):
         self.filename = filename
         self._contents = []  # type: List[Tuple[int, str]]
 
-    def _hash_prefix(self, prefix: str) -> str:
+    @staticmethod
+    def _hash_prefix(prefix: str) -> str:
         """Single location for hash-generation code."""
         return hashlib.sha1(prefix.encode('utf8')).hexdigest()
 
@@ -110,6 +111,8 @@ class Blacklist(object):
 
             # Intentionally die if we don't have permissions for the blacklist
             with open(self.filename, 'r') as fobj:
+                # ...but UnicodeDecodeError if it's malformed, since
+                # UnicodeDecodeError is subclass of ValueError
                 for row in fobj:
                     row = row.strip()  # Allow leading and trailing whitespace
 
@@ -118,6 +121,9 @@ class Blacklist(object):
 
                     # ValueError if field count or second field type are wrong
                     digest, prefix_len = row.split(None, 2)
+
+                    if len(digest) != 40:
+                        raise ValueError("Field 0 is not a valid MD5sum")
                     results.add((int(prefix_len), digest))
 
             # Replace atomically and keep sorted for short-circuit matching
@@ -296,7 +302,7 @@ def main():
     #else:
     Gtk.main()
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: nocover
     main()
 
 # vim: set sw=4 sts=4 expandtab :
